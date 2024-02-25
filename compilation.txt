@@ -1,0 +1,1 @@
+cc main.c image.c move.c read_map.c spawn.c utils.c -L/home/ylouvel/Documents/clean_so_long/mlx -lmlx -lXext -lX11
