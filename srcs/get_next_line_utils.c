@@ -6,7 +6,7 @@
 /*   By: ylouvel <ylouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 02:30:47 by ylouvel           #+#    #+#             */
-/*   Updated: 2024/02/13 19:28:59 by ylouvel          ###   ########.fr       */
+/*   Updated: 2024/02/29 07:42:01 by ylouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	sizetotal = ft_strlen(s1) + ft_strlen(s2);
 	res = malloc(sizeof(char) * (sizetotal + 1));
 	if (!res || !s1 || !s2)
+	{
+		free(res);
 		return (NULL);
+	}
 	while (s1[i] != 0)
 	{
 		res[i] = s1[i];
@@ -74,17 +77,9 @@ void	*ft_calloc(size_t elementCount, size_t elementSize)
 
 	res = malloc(elementSize * elementCount);
 	if (!res)
+	{
 		return (NULL);
+	}
 	ft_bzero(res, elementSize * elementCount);
 	return (res);
-}
-
-size_t	ft_strlen(const char *theString)
-{
-	int	i;
-
-	i = 0;
-	while (theString[i])
-		i++;
-	return (i);
 }

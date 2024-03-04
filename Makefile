@@ -1,74 +1,49 @@
-# COLORS
-END=$'\x1b[0m
-BOLD=$'\x1b[1m
-UNDER=$'\x1b[4m
-REV=$'\x1b[7m
-GREY=$'\x1b[30m
-RED=$'\x1b[31m
-GREEN=$'\x1b[32m
-YELLOW=$'\x1b[33m
-BLUE=$'\x1b[34m
-PURPLE=$'\x1b[35m
-CYAN=$'\x1b[36m
-WHITE=$'\x1b[37m
+CC = 			cc
+CFLAGS = 		-Wall -Wextra -Werror -L/home/ylouvel/sooooooooooo_long/mlx/ -lmlx -lXext -lX11
 
-OS 			:= $(shell uname)
+RM = 			rm -f
+
+NAME = 			so_long.o
+
 SRCS_DIR	= ./srcs/
-HEADER_DIR	= ./includes/
 
-SRCS 		= $(addprefix $(SRCS_DIR),\
-				image.c \
+SO_LONG_SRC = $(addprefix $(SRCS_DIR),\
 				backtracking.c \
+				backtracking_verif.c \
+				get_next_line_utils.c \
+				get_next_line.c image.c \
 				item_collect.c \
 				key.c \
-				get_next_line.c \
-				get_next_line_utils.c \
+				main.c \
 				read_map.c \
 				spawn.c \
-				verif_map.c \
 				utils.c \
-				main.c )
+				verif_map.c )
 
-OBJS		= $(SRCS:.c=.o)
+all : 		so_long
 
-CC			= cc
-RM			= rm -f
-MF 			= Makefile
+so_long :
+				${CC} ${SO_LONG_SRC} ${CFLAGS} -o ${NAME}
 
-CFLAGS	= -Wall -Wextra -Werror
+map :		so_long
+				./${NAME} map/map2.ber
 
-# LIBRARY
-MLX_DIR 	= ./mlx
-MLX_FLAGS	= -lXext -lX11
-MLX_PATH	= $(MLX_DIR)/libmlx.a
-MLX_FLAGS	= -L$(MLX_DIR) -I -g3 -L /usr/X11/lib -L$(HEADER_DIR) -L$(MLX_DIR) -lmlx -I$(MLX_DIR) -lXext -lX11
-MAKE_MLX	= make -C $(MLX_DIR)
+map1 :		so_long
+				./${NAME} maps/map1.ber
 
-NAME		= so_long
-
-.c.o:
-	@/bin/echo -n .
-	@$(CC) $(CFLAGS) -I $(HEADER_DIR) -c $< -o $(<:.c=.o)
-
-$(NAME):	$(MF) $(OBJS) libft mlx
-	@$(CC) $(CFLAGS) $(OBJS) $(MLX_PATH) $(MLX_FLAGS)  -o $(NAME)
-	@echo "\n${GREEN}> so_long was successfuly compiled 🎉${END}"
-
-all: 		$(NAME)
+map2 :		so_long
+				./${NAME} maps/map2.ber
+				
+re : 		fclean all
 
 clean:
-	@$(RM) $(OBJS)
-	@$(MAKE_MLX) clean
-	@echo "${YELLOW}> All objects files of so_long have been deleted ❌${END}"
+				$(RM) so_long.out
 
-fclean:		clean
-	@$(RM) $(NAME)
-	@$(MAKE_MLX) clean
-	@echo "${YELLOW}> Cleaning of so_long has been done ❌${END}"
+fclean: 	clean
+				$(RM) $(NAME)
 
-re:			fclean all
+.PHONY: 	fclean clean re all
 
-mlx:
-			@$(MAKE_MLX)
-
-.PHONY: all clean fclean re libft mlx
+# cc -Wall -Wextra -Werror convert_map.c get_next_line.c get_next_line_utils.c movements.c 
+# ft_check.c so_long_utils.c so_long_mvmt.c so_long_len_utils.c so_long_check_utils.c so_long.c 
+# -L/home/judenis/sgoinfre/judenis/42projects/so_long/minilibx/ -lmlx -lXext -lX11 -o a.out

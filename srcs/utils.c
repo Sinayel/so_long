@@ -6,29 +6,29 @@
 /*   By: ylouvel <ylouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 19:53:56 by ylouvel           #+#    #+#             */
-/*   Updated: 2024/02/25 23:12:58 by ylouvel          ###   ########.fr       */
+/*   Updated: 2024/02/29 02:34:53 by ylouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
 // Prend la largeur de la map
-int	largeur_map(t_data *essential)
+int	largeur_map(t_data *vars)
 {
 	int		hauteur;
 	char	buffer;
 	int		fd;
 
 	hauteur = 0;
-	if (essential == NULL || essential->files.map == NULL)
+	if (vars == NULL || vars->map == NULL)
 	{
 		perror("Error: invalid pointer or map file");
 		exit(1);
 	}
-	fd = open(essential->files.map, O_RDONLY);
+	fd = open(vars->map, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Error opening file");
+		perror("Error opening fileEE");
 		exit(1);
 	}
 	while (read(fd, &buffer, 1) > 0)
@@ -121,7 +121,6 @@ void 	for_update_coordinates(int *j, int *x, int *y, char *map)
 	}
 	close(fd);
 	nb_line--;
-	
 	update_coordinates(j, x, y, nb_line);
 }
 
@@ -136,13 +135,58 @@ void	update_coordinates(int *j, int *x, int *y, int nb_line)
 		(*y) += 80;
 		(*x) = 0;
 	}
-	//printf("%d ", *x);
 }
 
 // TODO: Ajouter le clear des images
 // Ferme la fenetre proprement :)
-int	cross_close()
+int	cross_close(t_data *vars)
 {
-	exit(1);
+	destroy_images(vars);
 	return (0);
+}
+
+// Initie les tableau a 0 pour le backtracking
+void	*ft_memset(void *str, int value, size_t len)
+{
+	unsigned char	*str_temp;
+
+	str_temp = (unsigned char *)str;
+	while (len > 0)
+	{
+		*(str_temp++) = (unsigned char)value;
+		len--;
+	}
+	return (str);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	char	*dest;
+	size_t	i;
+	dest = NULL;
+
+	dest = (char *)malloc(ft_strlen(s1) + 1);
+	i = 0;
+	if (!dest[i])
+	{
+		free(dest);
+		return (NULL);
+	}
+	while (s1[i])
+	{
+		dest[i] = s1[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: ylouvel <ylouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 04:41:59 by ylouvel           #+#    #+#             */
-/*   Updated: 2024/02/14 04:49:54 by ylouvel          ###   ########.fr       */
+/*   Updated: 2024/02/26 19:54:40 by ylouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ void	update_map_value(int x, int y, char *map, char new_value)
 	off_t	current_position;
 	char	buffer;
 
-	i = 0;
-	j = 0;
-	start_of_line = 0;
-	current_position = 0;
-	nb_line = calculate_line_length(map);
 	fd = open_map_file(map);
+	nb_line = calculate_line_length(map);
+	current_position = 0;
+	i = 0;
 	while (read(fd, &buffer, 1) > 0 && i <= nb_line)
 	{
 		if (buffer == '\n')
@@ -37,19 +35,21 @@ void	update_map_value(int x, int y, char *map, char new_value)
 			j = 0;
 			start_of_line = current_position + 1;
 		}
-		else
+		if (i == y && j == x)
 		{
-			if (i == y && j == x)
-			{
-				seek_to_position(fd, start_of_line + j);
-				write_new_value(fd, new_value);
-				break ;
-			}
-			j++;
+			update_map(fd, start_of_line + j, new_value);
+			break ;
 		}
+		j++;
 		current_position++;
 	}
 	close_map_file(fd);
+}
+
+void	update_map(int fd, off_t position, char new_value)
+{
+	back_to_position(fd, position);
+	write_new_value(fd, new_value);
 }
 
 // Ouvre le fichier de la carte
@@ -76,7 +76,7 @@ int	calculate_line_length(char *map)
 	{
 		nb_line++;
 	}
-	return (nb_line);
+	return (nb_line - 2);
 }
 
 // Ferme le fichier de la carte
@@ -90,7 +90,7 @@ void	close_map_file(int fd)
 }
 
 // Fonction pour se positionner dans le fichier
-void	seek_to_position(int fd, off_t position)
+void	back_to_position(int fd, off_t position)
 {
 	if (lseek(fd, position, SEEK_SET) == -1)
 	{
